@@ -238,6 +238,776 @@ else:
 
 
 
+24.1.10 수
+오늘 강의 내용 공유 부탁드립니다. 
+
+
+어제 잘 못 들은 것 같은데..클래스를 많이 사용 안하는게 좋은 이유가 무엇인가요?
+
+가독성이 안좋음
+
+규모에 따라 자율적으로
+
+규모가 커지면 클래스를 쓰는게 유리
+
+함수도 규모에 맞게
+
+
+
+
+
+24.1.13 금
+
+Numpy 튜토리얼 1부
+리스트로 알아보는 다차원 데이터
+스칼라 dim == 0
+
+a = 1
+
+
+벡터 (or 점) dim == 1
+3차원 공간의 한 점
+여기서 3차원은 vector space 이며 dimension과는 다름
+dimension은 선형대수학의 dimension과도 다름
+
+
+# 3차원 벡터
+a = [3, 4, 5]
+vector_space = len(a)
+
+# 1차원 벡터는 스칼라와 엄연히 다르면서도 같은 취급을 한다.
+a = [10]
+
+
+
+
+# Numpy 튜토리얼 1부
+
+# 리스트로 알아보는 다차원 데이터
+
+* 스칼라 dim == 0
+
+a = 1
+
+* 벡터 (or 점) dim == 1
+* 3차원 공간의 한 점
+* 여기서 3차원은 vector space 이며 dimension과는 다름
+* dimension은 선형대수학의 dimension과도 다름
+
+# 3차원 벡터
+a = [3, 4, 5]
+vector_space = len(a)
+
+# 1차원 벡터는 스칼라와 엄연히 다르면서도 같은 취급을 한다.
+a = [10]
+
+* 행렬 dim == 2
+
+#2행 3열 -> 2 by 3 -> (2, 3)
+a = [[1, 2, 3], [4, 5, 6]]
+rows = len(a)
+cols = len(a[0])
+
+
+---
+**Quiz**
+
+다음에 나타낸 행렬의 크기는 무엇인가?
+```
+a = [[1], [2]]
+b = [[1, 2, 3]]
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. a의 크기는 2행 1열이다. .shape = (2, 1)
+   * len(a)는 2이고 len(a[0])은 1이다.
+
+  2. b의 크기는 1행 3열이다.
+   * len(b)는 1이고, len(b[0])은 3이다.
+</details>
+
+---
+
+* 3차원 행렬 dim == 3
+* 3차원부터는 행렬의 개념이 희박해지며 선형대수학의 범주를 넘어서기 시작함
+* 행, 열, 그리고 페이지(page)/채널(channel)/깊이(depth) 등 응용에 따라 다양한 호칭 사용
+* 응용과 해석의 방법에 따라 페이지가 가장 앞에 오기도 함
+* 딥러닝에서 일반적으로 다루는 데이터는 dim >= 3
+
+#3행 2열 2쪽 -> (3, 2, 2)
+a = [[[1, 2], [3, 4]], [[5, 6], [7, 8]], [[9, 10], [11, 12]]]
+rows = len(a)
+cols = len(a[0])
+pages = len(a[0][0])
+
+#또는 3쪽 2행 2열 -> (3, 2, 2)
+pages = len(a)
+rows = len(a[0])
+cols = len(a[0][0])
+
+---
+**Quiz**
+
+다음에 나타낸 행렬의 크기는 무엇인가?
+
+```
+a = [[[1], [2], [3]], [[4], [5], [6]], [[7], [8], [9]], [[10], [11], [12]]]
+b = a[0]
+```
+<details>
+  <summary>정답</summary>
+
+  1. a의 크기는 (4, 3, 1)
+  2. b의 크기는 (3, 1)
+    
+</details>
+
+---
+
+# Ndarray 생성
+
+* numpy는 cblas로 구현된 행렬 라이브러리
+* 파이썬의 모든 행렬 데이터가 np.ndarray로 표현됨
+* np.array 는 ndarray타입의 인스턴스를 생성하는 함수
+
+import numpy as np
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a
+
+type(a)
+
+* 다양한 배열 생성 방법
+
+np.arange(5)
+
+np.zeros((2, 3))
+
+np.ones((2, 3))
+
+np.full((3, 4, 2), 10)
+
+# dtype
+
+* 하나의 원소를 표현하기 위해서 시스템의 primitive 타입을 이용
+* dtype으로 확인
+* 타입은 [uint/int/float][8/16/32/64] 의 조합으로 사용
+* 정수형에 대한 기본 타입은 int64
+
+a.dtype
+
+* 실수형에 대한 기본 타입은 float64
+
+a = np.array([[1., 2], [3, 4]])
+a
+
+a.dtype
+
+* 생성하면서 dtype을 지정할 수 있고 도중에 형변환도 가능
+
+b = np.float32(a)
+c = a.astype(np.float32) #b, c는 같다.
+b.dtype
+
+a = np.array([[1, 2], [3, 4]], np.uint8)
+a.dtype
+
+# shape & axis
+
+* 모든 배열은 정적 크기를 가짐
+* shape으로 확인
+* shape은 튜플이다.
+
+np.array([[1, 2], [3, 4]]).shape
+
+np.array([1, 2, 3]).shape
+
+np.array(1).shape
+
+---
+**Quiz**
+
+다음 배열의 shape은 무엇인가?
+```
+a = np.array([[1, 2], [3, 4], [5, 6]])
+b = np.array([[3, 4, 5]])
+c = np.array([[[1]]])
+d = np.arange(5)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. a.shape = (3, 2)
+   
+  2. b.shape = (1, 3)
+
+  3. c.shape = (1, 1, 1)
+
+  4. d.shape = (5,)
+   
+</details>
+
+---
+
+* shape의 길이는 dimention이라고 하며 이는 선형대수학의 dimention과는 개념이 다르다.
+* 벡터는 1차원, 행렬은 2차원이다.
+* ndim으로 확인
+
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a.ndim #len(a.shape) 과 같다.
+
+* shape의 각 자리를 축(axis)이라고 한다.
+* 행렬은 2개의 축을 가지고 있다.
+* 축마다 번호가 있으며 앞에서부터 0번, 뒤에서부터 -1번이다.
+* 2차원 행렬의 경우 행의 axis=0, 열의 axis=1 이다. (shape 순서대로)
+* 예를 들어 sum은 덧셈 결과를 출력하는데, 여기서 축 번호를 지정할 수 있다.
+
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a.sum() #축 번호가 없으면 모든 원소를 더함
+
+a.sum(axis=0) #0번축 방향으로 더함
+
+a.sum(axis=1) #1번축 방향으로 더함
+
+a.sum(axis=-1) #마지막 축 방향으로 더하는데, 여기서는 1과 같다.
+
+# reshape
+
+* shape은 변경 가능
+* 원소의 개수는 변할 수 없음
+
+a = np.arange(6)
+a.reshape(2, 3)
+
+a.reshape(3, 2)
+
+b = a.reshape(6, 1)
+b
+
+---
+**Quiz**
+
+x1, x2에 들어갈 숫자는 무엇인가?
+```
+a = np.arange(10)
+b = a.reshape(5, x1)
+c = a.reshape(x2, 10, 1)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. x1 = 2
+   
+  2. x2 = 1
+   
+  원소의 개수를 10으로 만들어야 한다.
+</details>
+
+---
+
+* 원소의 크기가 같아야 한다는 조건 때문에 reshape에서 숫자 하나는 생략해도 되는데 이것을 **와일드카드**라고 한다.
+* 와일드 카드는 -1 로 표현
+* 하나만 사용할 수 있다.
+
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a.reshape(-1, 2)
+
+a.reshape(-1)
+
+---
+**Quiz**
+
+다음에 나타난 배열 b, c, d 의 출력 결과는 무엇인가?
+```
+a = np.array([1, 2, 3, 4, 5, 6])
+b = a.reshape(3, 2)
+c = a.reshape(2, 3)
+d = b.reshape(2, 3)
+print(b)
+print(c)
+print(d)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. [[1, 2], [3, 4], [5, 6]]
+
+  2. [[1, 2, 3], [4, 5, 6]]
+
+  3. [[1, 2, 3], [4, 5, 6]]
+   * b.reshape(-1).reshape(-1, 3)으로 생각하면 쉽다.
+   * 원본 데이터가 [1, 2, 3, 4, 5, 6] 이라면 (2, 3)으로 reshape했을 때의 결과는 항상 똑같다. 예) a.reshape(-1).reshape(2, 3).reshape(3, 2).reshape(2, 3) 도 결과는 [[1, 2, 3], [4, 5, 6]]
+</details>
+
+
+**Quiz for Advandced**
+
+a로부터 ```[[1, 4], [2, 5], [3, 6]]``` 을 만들고 싶으면 어떻게 해야 할까?
+
+<details>
+  <summary>정답</summary>
+
+  1. transpose를 활용한다. 정답은 ```a.reshape(2, 3).transpose(1, 0)``` 이다.
+
+</details>
+
+---
+
+# 원소에 대한 접근(인덱싱)
+
+* 개별 원소에 접근하여 값을 꺼내오거나 수정할 수 있다.
+* 원소에 접근할 때는 튜플을 사용한다.
+
+a = np.array([1, 2, 3, 4, 5])
+a[1] = 10
+a
+
+a[0] + a[3]
+
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a[(0, 2)] = 10
+a
+
+#괄호는 생략 가능
+a[0, 2]
+
+* 정해진 크기를 벗어난 인덱싱은 오류
+* 자주 보는 오류 메시지이므로 기억해두면 좋음
+
+a[0, 3] #에러 발생
+
+---
+**Quiz**
+
+다음 a의 shape은 무엇인가?
+```
+a = np.array([[[1, 2]], [[3, 4]]])
+print(a.shape)
+```
+이어서 다음과 같이 a를 수정할 경우 a의 값은 어떻게 되는가?
+```
+a[0, 0, 0] = 10
+a[1, 0, 0] = 20
+print(a)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. ```(2, 1, 2)```
+   * len(a), len(a[0]), len(a[0, 0])을 생각해본다.
+   
+  2. ```[[[10, 2]], [[20, 4]]]```
+   * a[0, 0, 0]은 1이고, a[1, 0, 0]은 3이다. 두 값이 10과 20으로 변경된다.
+</details>
+
+---
+
+# 부분 행렬 (슬라이싱)
+
+* 먼저 바닐라 리스트의 부분행렬을 기억해본다.
+
+a = [1, 2, 5, 10, 20]
+a[1:4] # a(i) for 1 <= i < 4
+
+* 넘파이도 똑같이 적용 가능
+
+a = np.array([1, 2, 5, 10, 20])
+a[1:4]
+
+a[1:4].shape
+
+a[:]
+
+* 2차원에 대해서도 동일하게 접근 가능하다.
+
+a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+a
+
+a[:, :]
+
+a[:2, 1:]
+# a[i, j] for i < 2 and 1 <= j
+# 조건에 만족하는 i는 0, 1,   j는 1, 2이다.
+# 즉 0행과 1행, 1열과 2열을 선택한다.
+
+---
+**Quiz**
+
+```a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])```
+일 때
+
+```[[1, 2, 3]]```를 얻으려면 어떻게 접근해야 하는가?
+
+<details>
+  <summary>정답</summary>
+  
+  1. ```a[0:1, :]```
+
+</details>
+
+**Quiz for Advanced**
+
+```[1, 2, 3]```를 얻으려면 어떻게 접근해야 하는가?
+
+<details>
+  <summary>정답</summary>
+  
+  1. ```a[0, :]```
+
+</details>
+
+* ```[[1, 2, 3]]```과 ```[1, 2, 3]```은 대충 비슷하다고 생각할 것이 아니라
+* 둘을 정확히 구분하고 원하는 결과를 얻어낼 줄 알아야 함
+---
+
+* 바닐라 리스트에서 숫자를 넣어서 인덱싱하면 리스트가 벗겨진다.
+* 넘파이로 비유하면 축이 사라지는 효과를 얻는다.
+
+b = [1, 2, 3, 4, 5] #shape=(5,)
+b[0] #리스트 아님 #shape=()
+
+* 반면 ':'을 사용하여 인덱싱하면 리스트 형태가 그대로 남는다.
+
+b[0:1] #원소가 단 하나여도 리스트 형태가 유지됨 #shape=(1,)
+
+b = [[1, 2, 3], [4, 5, 6]] #shape=(2, 3)
+b[0] #shape=(3,)
+
+b[:1] #shape=(1, 3)
+
+* 넘파이의 경우 ':'을 사용(슬라이싱)하면 shape의 축이 그대로 유지된다. (크기가 줄어들더라도)
+* 숫자를 넣어서 인덱싱하면 축이 없어져버린다. (dim이 줄어든다)
+
+a = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+a
+#shape = (3, 3) 이다. axis=0의 크기(행) = 3, axis=1의 크기(열) = 3
+
+a[:, 2]
+#axis=0  : 을 사용했으므로 그대로 유지
+#axis=1  2 로 인덱싱했으므로 축이 없어짐
+#원래 크기 (3, 3)에서 axis=1 부분이 없어지고 (3,)만 남음
+
+a[:, 2:]
+#axis=0  : 을 사용했으므로 그대로 유지
+#axis=1  2: 로 슬라이싱, 크기가 줄어듦
+#원래 크기 (3, 3)에서 axis=0은 그대로 유지되고 axis=1이 1로 줄어들면서 (3, 1)이 된다.
+
+---
+**Quiz**
+
+다음과 같이 행렬 a가 주어졌을 때,
+```
+a = np.arange(16).reshape(4, 4)
+print(a)
+```
+출력결과 다음과 같다.
+```
+[[ 0  1  2  3]
+ [ 4  5  6  7]
+ [ 8  9 10 11]
+ [12 13 14 15]]
+ ```
+
+다음 b, c, d, e의 값과 shape은 무엇인가?
+```
+b = a[:, 3:]
+c = a[2:4, :2]
+d = a[0, 3:]
+e = a[:, 2]
+print(b, b.shape)
+print(c, c.shape)
+print(d, d.shape)
+print(e, e.shape)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. b = [[3, 7, 11, 15]], b.shape = (1, 4)
+
+  2. c = [[8, 9], [12, 13]], c.shape = (2, 2)
+
+  3. d = [3] d.shape = (1,)
+   
+  4. e = [2, 6, 10, 14] d.shape = (4,)
+</details>
+
+부분행렬 ```[[2, 3], [6, 7]]```을 얻으려면 a에 어떻게 접근해야 하는가?
+
+부분행렬 ```[4, 5, 6, 7]```을 얻으려면 a에 어떻게 접근해야 하는가?
+
+<details>
+  <summary>정답</summary>
+
+  1. a[:2, 2:]
+
+  2. a[1]
+  
+</details>
+
+---
+
+# 행렬을 리스트처럼
+
+* 슬라이싱에서 뒤쪽에 오는 ':'은 생략 가능하다.
+
+a = np.arange(9).reshape(3, 3)
+a
+
+a[1, :]
+
+a[1]
+
+* 이는 마치 바닐라 리스트를 다루는 것과 유사하다.
+
+b = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+b[1]
+
+* 넘파이의 xis=0축은 원소의 개수, 나머지는 개별 원소의 크기로 취급
+* 예) (4, 3, 2) 크기의 배열은 (3, 2) 크기의 배열이 4개 있는 리스트
+
+# (3, 2) 크기의 배열
+a = np.array([[1, 2], [3, 4], [5, 6]])
+# (2,) 크기의 배열을 3개 가지고 있는 리스트
+b = [np.array([1, 2]), np.array([3, 4]), np.array([5, 6])]
+
+# 위의 둘은 물론 엄격히 다른 것이지만
+# a를 b처럼 생각하고 다뤄도 된다.
+
+* 넘파이 배열은 리스트가 가지고 있는 모든 기능을 다 가지고 있음
+
+# (3, 2) 크기의 원소를 4개 가지고 있음
+a = np.arange(24).reshape(4, 3, 2)
+len(a)
+
+#반복문도 돌릴 수 있다.
+for v in a:
+    print(v.shape)
+
+#a의 0번째 원소
+a[0]
+
+#는 사실 뒤에 :을 생략한 것이라고 여겨도 된다.
+a[0, :, :]
+
+---
+**Quiz**
+
+다음 b, c, d의 shape을 구하시오.
+```
+a = np.arange(6).reshape(3, 2, 1)
+b = a[0]
+c = a[:2, 0]
+d = a[0, :, 0]
+print(b.shape)
+print(c.shape)
+print(d.shape)
+```
+
+<details>
+  <summary>정답</summary>
+
+  1. b.shape = (2, 1)
+   * ```a[0] == a[0, :, :]``` 이다. (3, 2, 1)의 shape에서 axis=0이 없어지면 (2, 1)만 남는다.
+   * 또는 (2, 1) 크기의 원소가 3개 있는 리스트로 생각했을 때, 0번째 원소를 꺼내면 그 크기는 (2, 1)이다.
+
+  2. c.shape = (2, 1)
+    * ```a[:2, 0] == a[:2, 0, :]``` 이다. 원래 크기 (3, 2, 1)에서 axis=0의 크기는 2로 줄어든다. axis=1은 인덱싱으로 사라진다. axis=2의 크기는 1이므로 최종 크기는 (2, 1)이다.
+
+  3. d.shape = (2,)
+    * axis=0과 axis=2가 인덱싱으로 사라지고 axis=1만 남는다.
+</details>
+---
+
+# 튜플 대신 연속된 인덱싱을 사용면 생기는 일
+
+a = np.arange(24).reshape(2, 3, 4)
+a
+
+a[0, 1, 2] #이게 정석적인 인덱싱
+
+a[0][1][2] #결과만 보면 똑같아 보이지만
+
+#해체하면 아래와 같다.
+b = a[0]
+c = b[1]
+d = c[2] #a[0][1][2]와 같다.
+d
+
+* 튜플 대신 인덱싱을 연속으로 하면 매우 속도가 느려진다
+* 가끔 의도치 않은 결과를 얻을 수도 있다.
+
+a = np.array([[1, 2, 3], [4, 5, 6]])
+a[:, 1]
+
+a[:][1]
+
+#a[:][1]을 풀어보면
+b = a[:] #b=[[1, 2, 3], [4, 5, 6]]
+c = b[1] #b[1] = b[1, :] = [4, 5, 6]
+c
+
+
+===============================================================
+24.1.15 월
+
+@ y, @ theta는 무슨 뜻인가요?
+
+
+해석적 방법(LMS?)
+- Pseud Inv,
+-커널
+-Scaling
+-Sample의 갯수를 늘린다. 
+
+해석적 방법
+RANSAC
+
+책이름 : 핸즈온 머신러닝(2판)
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+m = 100
+x = np.random.rand(m, 1) * 2
+y = x * 3 + 4 + np.random.randn(m, 1)
+
+plt.plot(x, y, '.')
+
+def kernel(x):
+    return np.c_[x, np.ones(len(x))]
+xb = kernel(x)
+theta = np.linalg.pinv(xb)  @ y
+theta, _, _, _ = np.linalg.lstsq(xb, y, rcond=None)
+theta
+
+a = theta[0, 0]
+b = theta[1, 0]
+
+def model(x):
+    return x * a + b
+
+def model(x):
+    return kernel(x) @ theta
+
+xn = np.array([[0], [2]])
+yn = model(xn)
+
+plt.plot(x, y, '.')
+plt.plot(xn, yn)
+
+model(2)
+
+# 이차방정식
+
+m = 10000
+x = np.random.rand(m, 1)  * 6 - 3
+y = 0.5 * x **2 + x + 2 + np.random.randn(m, 1)
+
+plt.plot(x, y, '.', alpha=0.1)
+
+def kernel2(x):
+    return np.c_[ x**2,  x , np.ones(len(x)) ]
+xb = kernel2(x)
+theta = np.linalg.pinv(xb) @ y
+theta
+
+def model(x): #N, 1
+    return kernel2(x) @ theta
+
+xn = np.linspace(-3, 3, 100).reshape(100, 1)
+yn = model(xn)
+
+plt.plot(x, y, '.')
+plt.plot(xn, yn, '-')
+
+def kernel(x, n):
+    x_list = []
+    for i in range(1, n+1):
+        x_list.append(x**i)
+    xb = np.concatenate([np.ones(len(x)).reshape(-1, 1)] + x_list, axis=1)
+    return xb
+
+xb = kernel(x, 100)
+
+#스케일링
+M = xb[:, 1:].mean(axis=0)
+S = xb[:, 1:].std(axis=0)
+xb[:, 1:] = (xb[:, 1:] - M) / S
+
+#theta 구하기
+theta = np.linalg.pinv(xb) @ y
+
+#적용...  -3부터 +3까지 값을 다 model에 넣어서 추정값(y)를 확인
+xn = np.linspace(-3, 3, 100).reshape(100, 1)
+#여기서 갑자기 평균을 또 구하고 있으면 안 된다....
+xb = kernel(xn, 100)
+xb[:, 1:] = (xb[:, 1:] - M) / S
+yn = xb @ theta
+
+plt.plot(x, y, '.')
+plt.plot(xn, yn, '-')
+plt.axis([-3, 3, 0, 12])
+
+xb[:, -1]
+
+# 연습
+
+#(x1, y1), (x2, y2), (x3, y3)
+x = [0, 1, 2]
+y = [0, 5, 3]
+
+
+plt.plot(x, y, '*--')
+
+a = np.array([1, 2, 3])
+b = np.array([4, 5, 6])
+np.c_[a, b]
+
+np.r_[[a], [b]]
+
+np.ones(10).reshape(10, 1)
+
+#linspace
+np.linspace(0, 10, 5)
+
+#concatenate
+a = np.array([[1, 2], [3, 4]])
+b = np.array([[5, 6], [7, 8]])
+np.concatenate([a, b], axis=0)
+
+#scaling 연습
+
+a = np.array([1, 4, 2, 5, 7, 4, 3, 9, 2])
+M = a.mean()
+S = a.std()
+b =(a - M) / S
+b.mean(), b.std()
+
+a = np.array([[10, 20], [40, 90], [10, 80], [50, 50]])
+M = a.mean(axis=0) #.shape = (2,)
+S = a.std(axis=0) #.shape = (2,)
+
+b = (a - M) / S
+
+b.mean(axis=0), b.std(axis=0)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
