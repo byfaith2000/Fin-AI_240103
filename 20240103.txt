@@ -1000,6 +1000,118 @@ b.mean(axis=0), b.std(axis=0)
 
 
 
+==================================================================
+24.1.16 화
+import torch
+import numpy as np
+import matplotlib.pyplot as plt
+
+torch.tensor([1, 2, 3]) + torch.tensor([4, 5, 6])
+
+torch.tensor([1., 2., 3.]).dtype
+
+a = np.array([1., 2., 3.])
+torch.tensor(a) + torch.tensor([1., 2., 3.])
+
+torch.tensor([1., 2., 3.])
+
+np.array([1., 2., 3.], np.float32)
+
+torch.ones((3, 2))[:, 0]
+
+torch.arange(3)[[0, 0, 0, 1, 1]]
+
+#requres_grad 옵션이 붙은 텐서가 범인이다!
+x = torch.tensor(1., requires_grad=True)
+y = torch.tensor(2., requires_grad=True)
+#feed-forwarding 미분 대상을 계산한다.
+z = 2 * x ** 2 + x * y + 3 * y
+#미분 실행!
+x.grad = None
+y.grad = None
+z.backward()
+
+#결과 확인
+x.grad, y.grad
+
+
+z = 2 * x ** 2 + x * y + 3 * y
+x.grad = None
+y.grad = None
+z.backward()
+
+x.grad, y.grad
+
+# 1차 함수의 파라미터를 경사하강법으로 찾아내는 건에 대하여
+
+
+
+
+m = 100
+x = torch.rand(m, 1) * 2
+y = x * 3 + 4 + torch.randn(m, 1)
+
+plt.plot(x, y, '.')
+
+
+
+#f(x) = ax + b
+lin = torch.nn.Linear(1, 1)
+
+opt = torch.optim.Adam(lin.parameters())
+
+list(lin.parameters())
+
+loss_fn = torch.nn.MSELoss()
+
+lr = 0.1
+for step in range(5000):
+    #1. feed-forward
+    pred = lin(x)
+    #2. loss
+    loss = loss_fn(pred, y)
+    #3. grad
+    opt.zero_grad()
+    loss.backward()
+    #4. update
+    opt.step()
+
+    if step % 100 == 0:
+        print(f'{step} {loss}')
+
+a, b
+
+a_ = np.array(a.detach())
+b_ = np.array(b.detach())
+
+a_ * np.array([0, 2]) + b_
+
+# 연습
+
+lin = torch.nn.Linear(3, 2)
+
+lin.weight
+
+lin.bias
+
+dummy = torch.randn((5, 3))
+lin(dummy)
+
+
+dummy @ lin.weight.T + lin.bias
+
+w = torch.randn((3, 2), requires_grad=True)
+b = torch.randn((1, 2), requires_grad=True)
+
+
+
+for i in range(5000):
+    pred = w * a + b
+    loss_fn(pred, y)
+
+
+
+
 
 
 
